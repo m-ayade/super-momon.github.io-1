@@ -29,6 +29,16 @@ interface Notification {
 
 const notifications: Notification[] = [
   {
+    id: 7,
+    headline: "Promotion: Full Stack Developer - Mid Level",
+    text: "💼 Promoted to Full Stack Developer - Mid Level at Talleco.com Inc. | JobTarget PH.",
+    icon: faBriefcase,
+    timestamp: "August 2026",
+    color: "text-emerald-500",
+    link: "/#experience",
+    linkText: "View Experience",
+  },
+  {
     id: 6,
     headline: "Open Post is Live!",
     text: "📌 Introducing Open Post! An infinite anonymous spatial canvas board for posting sticky notes, nested comments, and real-time ideas with zero sign-up.",

@@ -8,11 +8,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faIndustry, faBriefcase, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import SectionHeader from "@/components/common/SectionHeader";
 
-const experiences = [
+interface ExperienceItem {
+  role: string;
+  company: string;
+  period: string;
+  description: string[];
+  tags: string[];
+  current: boolean;
+  promoted?: boolean;
+  industry: string;
+}
+
+const experiences: ExperienceItem[] = [
+  {
+    role: "Full Stack Developer - Mid Level",
+    company: "Talleco.com Inc. | JobTarget PH",
+    period: "Aug 2026 — Present",
+    description: [],
+    tags: [],
+    current: true,
+    promoted: true,
+    industry: "Human Capital Management - Recruitment Software",
+  },
   {
     role: "Full Stack Software Developer",
     company: "Talleco.com Inc. | JobTarget PH",
-    period: "Feb 2025 — Present",
+    period: "Feb 2025 — Jul 2026",
     description: [
       "Implemented event-driven backend solutions using AWS services including Lambda, SQS, SNS, and S3 to support scalable and reliable application workflows.",
       "Developed and enhanced application features across multiple client-facing and internal services, improving maintainability and operational efficiency.",
@@ -22,7 +43,7 @@ const experiences = [
       "Worked across multiple services and applications utilizing different technology stacks and architectures.",
     ],
     tags: ["AWS", "Lambda", "SQS", "SNS", "S3", "MS SQL Server", "PostgreSQL", "MongoDB", "Event-Driven Architecture"],
-    current: true,
+    current: false,
     industry: "Human Capital Management - Recruitment Software",
   },
   {
@@ -111,7 +132,7 @@ export default function Experience() {
           <div className="space-y-8 md:space-y-12">
             {experiences.map((exp, index) => (
               <motion.div
-                key={index}
+                key={exp.role}
                 initial={{ opacity: 0, x: -16 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
@@ -130,7 +151,13 @@ export default function Experience() {
                 </div>
 
                 {/* Role Card */}
-                <div className="p-6 md:p-8 rounded-3xl border border-border/80 dark:border-border/50 bg-surface/95 dark:bg-surface/40 backdrop-blur-xl shadow-md shadow-black/5 dark:shadow-black/25 group-hover:border-accent/50 group-hover:bg-surface/100 group-hover:-translate-y-0.5 transition-all duration-300">
+                <div
+                  className={`p-6 md:p-8 rounded-3xl border backdrop-blur-xl transition-all duration-300 group-hover:-translate-y-0.5 ${
+                    exp.promoted
+                      ? "border-accent/60 bg-accent/5 dark:bg-accent/5 shadow-lg shadow-accent/10 ring-1 ring-accent/15 group-hover:border-accent group-hover:bg-accent/10"
+                      : "border-border/80 dark:border-border/50 bg-surface/95 dark:bg-surface/40 shadow-md shadow-black/5 dark:shadow-black/25 group-hover:border-accent/50 group-hover:bg-surface/100"
+                  }`}
+                >
                   {/* Header */}
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                     <div>
@@ -142,6 +169,11 @@ export default function Experience() {
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/15 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-accent shadow-xs">
                             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
                             Current Role
+                          </span>
+                        )}
+                        {exp.promoted && (
+                          <span className="inline-flex items-center rounded-full border border-accent/60 bg-accent/10 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-accent shadow-xs">
+                            Promotion
                           </span>
                         )}
                       </div>
@@ -158,39 +190,45 @@ export default function Experience() {
                     </span>
                   </div>
 
-                  <div className="h-px bg-border/40 mb-4" />
+                  {exp.description.length > 0 && (
+                    <>
+                      <div className="h-px bg-border/40 mb-4" />
 
-                  {/* Bullet Points */}
-                  <ul className="space-y-2.5 mb-6">
-                    {exp.description.map((point, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-foreground/85">
-                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-accent shrink-0 group-hover:scale-125 transition-transform" />
-                        <span>{point}</span>
-                      </li>
-                    ))}
-                  </ul>
+                      {/* Bullet Points */}
+                      <ul className="space-y-2.5 mb-6">
+                        {exp.description.map((point, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-foreground/85">
+                            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-accent shrink-0 group-hover:scale-125 transition-transform" />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
                   {/* Tech Tags - Interactive Cross-Linking */}
-                  <div className="flex flex-wrap gap-1.5 pt-4 border-t border-border/30">
-                    {exp.tags.map((tag) => (
-                      <button
-                        key={tag}
-                        type="button"
-                        onClick={() => {
-                          trackEvent("experience_tag_click", { tag });
-                          // Smooth scroll to Projects or Skills section
-                          const targetSection = document.getElementById("projects") || document.getElementById("skills");
-                          if (targetSection) {
-                            targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
-                          }
-                        }}
-                        className="min-h-11 px-2.5 py-2 rounded-lg text-xs font-mono bg-background/80 border border-border/70 text-foreground/80 hover:border-accent hover:text-accent hover:bg-accent/10 transition-all cursor-pointer shadow-2xs"
-                        title={`View projects & skills related to ${tag}`}
-                      >
-                        #{tag}
-                      </button>
-                    ))}
-                  </div>
+                  {exp.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-4 border-t border-border/30">
+                      {exp.tags.map((tag) => (
+                        <button
+                          key={tag}
+                          type="button"
+                          onClick={() => {
+                            trackEvent("experience_tag_click", { tag });
+                            // Smooth scroll to Projects or Skills section
+                            const targetSection = document.getElementById("projects") || document.getElementById("skills");
+                            if (targetSection) {
+                              targetSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }
+                          }}
+                          className="min-h-11 px-2.5 py-2 rounded-lg text-xs font-mono bg-background/80 border border-border/70 text-foreground/80 hover:border-accent hover:text-accent hover:bg-accent/10 transition-all cursor-pointer shadow-2xs"
+                          title={`View projects & skills related to ${tag}`}
+                        >
+                          #{tag}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
